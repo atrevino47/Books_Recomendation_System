@@ -15,7 +15,7 @@
     --text: #2c3e50;
   }
 
-.stApp {
+/* .stApp {
     background: var(--background);
 }
 
@@ -26,6 +26,8 @@ div.stTabs button {
 .stApp header {
     background: var(--amazon_grey);
 }
+
+.stText */
 
 
 /* DASHBOARD PADDING */
