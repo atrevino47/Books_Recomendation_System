@@ -486,7 +486,7 @@ def display_graph5():
     )
 
     top_5_books = average_scores.nlargest(15, "roberta_compound")
-    print(top_5_books)
+    # print(top_5_books)
     # Plotly horizontal bar chart
     fig = px.bar(
         top_5_books,
@@ -663,7 +663,7 @@ def recommendation_svd_1(model_select, reader_select, metric_score, user_id_sele
             df_ratings_books_processed["user_id"] == user_id
         ].sort_values(by=metric_score, ascending=False)["title"]
     )
-    print("Books highly rated by given user: \n")
+    # print("Books highly rated by given user: \n")
 
     most_liked = most_liked = (
         df_ratings_books_processed[df_ratings_books_processed["user_id"] == user_id]
@@ -685,8 +685,8 @@ def recommendation_svd_1(model_select, reader_select, metric_score, user_id_sele
     ].head(10)
     # .style.format({"previewLink": make_clickable, "image": show_image})
 
-    for count, books in tqdm(enumerate(list(book_title_liked_by_user)[:20])):
-        print(count + 1, ".  ", books)
+    # for count, books in tqdm(enumerate(list(book_title_liked_by_user)[:20])):
+    #     print(count + 1, ".  ", books)
     return (
         top_50_books_for_user_content,
         most_liked,
@@ -758,7 +758,7 @@ def recommendation_svd_2(model_select, reader_select, metric_score, user_id_sele
             df_ratings_books_processed["user_id"] == user_id
         ].sort_values(by=metric_score, ascending=False)["title"]
     )
-    print("Books highly rated by given user: \n")
+    # print("Books highly rated by given user: \n")
 
     most_liked = (
         df_ratings_books_processed[df_ratings_books_processed["user_id"] == user_id]
@@ -780,8 +780,8 @@ def recommendation_svd_2(model_select, reader_select, metric_score, user_id_sele
     ].head(10)
     # .style.format({"previewLink": make_clickable, "image": show_image})
 
-    for count, books in tqdm(enumerate(list(book_title_liked_by_user)[:20])):
-        print(count + 1, ".  ", books)
+    # for count, books in tqdm(enumerate(list(book_title_liked_by_user)[:20])):
+    #     print(count + 1, ".  ", books)
     return (
         top_50_books_for_user_content,
         most_liked,
