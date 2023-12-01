@@ -422,7 +422,10 @@ def display_graph4():
         "The Hobbit or There and Back Again": "The Hobbit",
         "The Hobbit There and Back Again": "The Hobbit",
     }
-    df_final["grouped_title"] = (
+    # df_final["grouped_title"] = (
+    #     df_final["title"].map(title_mapping).fillna(df_final["title"])
+    # )
+    df_final.loc[:, "grouped_title"] = (
         df_final["title"].map(title_mapping).fillna(df_final["title"])
     )
 
@@ -618,7 +621,8 @@ def recommendation_svd_1(model_select, reader_select, metric_score, user_id_sele
     user_books = df_ratings_books_processed[
         ~df_ratings_books_processed["book_id"].isin(book_id)
     ]  # has all books that haven't been reviewd
-    user_books["user_id"] = len(user_books) * [user_id]
+    # user_books["user_id"] = len(user_books) * [user_id]
+    user_books.loc[:, "user_id"] = len(user_books) * [user_id]
     user_books.reset_index(drop=True, inplace=True)
 
     df_svd_predict = Dataset.load_from_df(
@@ -627,7 +631,8 @@ def recommendation_svd_1(model_select, reader_select, metric_score, user_id_sele
     NA, test = model_selection.train_test_split(df_svd_predict, test_size=1.0)
     predictions = model_select.test(test)
     predictions = [prediction.est for prediction in predictions]
-    user_books["rating"] = predictions
+    # user_books["rating"] = predictions
+    user_books.loc[:, "rating"] = predictions
 
     user_books_grouped = (
         user_books.groupby("book_id")
@@ -713,7 +718,8 @@ def recommendation_svd_2(model_select, reader_select, metric_score, user_id_sele
     user_books = df_ratings_books_processed[
         ~df_ratings_books_processed["book_id"].isin(book_id)
     ]  # has all books that haven't been reviewd
-    user_books["user_id"] = len(user_books) * [user_id]
+    # user_books["user_id"] = len(user_books) * [user_id]
+    user_books.loc[:, "user_id"] = len(user_books) * [user_id]
     user_books.reset_index(drop=True, inplace=True)
 
     df_svd_predict = Dataset.load_from_df(
@@ -722,7 +728,8 @@ def recommendation_svd_2(model_select, reader_select, metric_score, user_id_sele
     NA, test = model_selection.train_test_split(df_svd_predict, test_size=1.0)
     predictions = model_select.test(test)
     predictions = [prediction.est for prediction in predictions]
-    user_books["rating"] = predictions
+    # user_books["rating"] = predictions
+    user_books.loc[:, "rating"] = predictions
 
     user_books_grouped = (
         user_books.groupby("book_id")
