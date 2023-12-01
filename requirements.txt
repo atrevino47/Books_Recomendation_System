@@ -9,10 +9,10 @@ Pillow
 plotly
 folium
 streamlit_folium
-folium.plugins
-plotly.graph_objects
-streamlit.components.v1
-matplotlib.colors
+# folium.plugins
+# plotly.graph_objects
+# streamlit.components.v1
+# matplotlib.colors
 streamlit_elements
 dashboard
 pickle
