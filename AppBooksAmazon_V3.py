@@ -56,19 +56,19 @@ def load_dataframe_2(_data):
 
 # // TODO: Turn code into object oriented programming
 
-reviews_wBooks_data = load_data("/Resources/DataFrames/reviews_wBooks_data.parquet")
+reviews_wBooks_data = load_data("Resources/DataFrames/reviews_wBooks_data.parquet")
 
-books_data = load_data("/Resources/DataFrames/books_data_compresed.parquet")
+books_data = load_data("Resources/DataFrames/books_data.parquet")
 
 df_ratings_books_processed = load_data(
-    "/Resources/DataFrames/SentimentAnalysis/200plusRatingsPerUser_60plusRatingsPerBook/df_ratings_books_processed.parquet"
+    "Resources/DataFrames/SentimentAnalysis/200plusRatingsPerUser_60plusRatingsPerBook/df_ratings_books_processed.parquet"
 )
 
 df_books_processed = load_data(
-    "/Resources/DataFrames/SentimentAnalysis/200plusRatingsPerUser_60plusRatingsPerBook/df_books_processed.parquet"
+    "Resources/DataFrames/SentimentAnalysis/200plusRatingsPerUser_60plusRatingsPerBook/df_books_processed.parquet"
 )
 
-amazon_logo = Image.open(r"/Resources/Images/amazon_logo.jpg")
+amazon_logo = Image.open(r"Resources/Images/amazon_logo.jpg")
 
 
 # Load Book Recommender Model
@@ -78,12 +78,13 @@ def load_models(file):
     return model
 
 
-model_SA = load_models("/Resources/Models/BookRecommendation/model_svd_SA.pkl")
+model_SA = load_models("Resources/Models/BookRecommendation/model_svd_SA.pkl")
 
 
 # // NOTE: DATA PREPROCESSING
 # // TODO: Turn into functions
 
+books_data.rename(columns={"Title": "title", "categories": "genre"}, inplace=True)
 
 grouped_df = (
     reviews_wBooks_data.groupby("title")
@@ -123,7 +124,7 @@ merged_df = pd.merge(
 merged_df = merged_df.dropna()
 merged_df.reset_index(inplace=True)
 
-authors_df = pd.read_parquet("/Resources/DataFrames/GenericDF/authors_df.parquet")
+authors_df = pd.read_parquet("Resources/DataFrames/GenericDF/authors_df.parquet")
 
 # Merge with locations with books df
 merged_df_withloc = pd.merge(
@@ -147,7 +148,7 @@ reviews_wBooks_data = reviews_wBooks_data[reviews_wBooks_data["genre"] != "NoGen
 
 # // NOTE: CSS
 
-with open("/Resources/DataFrames/Styles/style.css") as f:
+with open("Resources/DataFrames/Styles/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
@@ -1242,4 +1243,4 @@ st.markdown(hide_st_style, unsafe_allow_html=True)
 
 
 # // NOTE: to run streamlit app use:
-# // NOTE: streamlit run C:\Users\adria\Documents\Projects\Books\WebAppsDemo\AppBooksAmazon_V3.py --server.headless true
+# // NOTE: streamlit run C:\Users\adria\Documents\MyPortfolio\Book_Recommendation_System\AppBooksAmazon_V3.py --server.headless true
