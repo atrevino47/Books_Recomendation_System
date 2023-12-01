@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
+
 :root {
     --amazon_orange: #e47911;
     --amazon_blue: #232f3e;
@@ -13,6 +14,19 @@
     --background: #ecf0f1;
     --text: #2c3e50;
   }
+
+.stApp {
+    background: var(--background);
+}
+
+div.stTabs button {
+    background: var(--amazon_grey);
+}
+
+.stApp header {
+    background: var(--amazon_grey);
+}
+
 
 /* DASHBOARD PADDING */
 div.block-container.css-z5fcl4.egzxvld4 {
