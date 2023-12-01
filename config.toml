@@ -1,2 +1,6 @@
 [theme]
-base="light"
+
+
+backgroundColor="#ecf0f1"
+textColor="#111111"
+

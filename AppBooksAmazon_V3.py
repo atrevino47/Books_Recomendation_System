@@ -148,7 +148,7 @@ reviews_wBooks_data = reviews_wBooks_data[reviews_wBooks_data["genre"] != "NoGen
 
 # // NOTE: CSS
 
-with open("Resources/DataFrames/Styles/style.css") as f:
+with open("Resources/Code/Styles/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
