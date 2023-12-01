@@ -414,7 +414,7 @@ def display_graph4():
         .index.get_level_values("authors")
     )
 
-    df_final = df_top_genres[df_top_genres["authors"].isin(top_authors_by_genre)]
+    df_final_0 = df_top_genres[df_top_genres["authors"].isin(top_authors_by_genre)]
 
     title_mapping = {
         "The Hobbit; Or, There and Back Again": "The Hobbit",
@@ -425,6 +425,7 @@ def display_graph4():
     # df_final["grouped_title"] = (
     #     df_final["title"].map(title_mapping).fillna(df_final["title"])
     # )
+    df_final = df_final_0.copy()
     df_final.loc[:, "grouped_title"] = (
         df_final["title"].map(title_mapping).fillna(df_final["title"])
     )
