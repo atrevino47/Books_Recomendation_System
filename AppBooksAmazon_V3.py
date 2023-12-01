@@ -190,24 +190,24 @@ continuous_colors = [
     (1, custom_palette["amazon_blue"]),
 ]
 
-# // NOTE: Apply the custom color palette using CSS
-custom_css = f"""
-    <style>
-        body {{
-            background-color: {custom_palette['amazon_grey']};
-            color: {custom_palette['text']};
-        }}
-        .st-bw {{
-            background-color: {custom_palette['amazon_blue']};
-        }}
-        .st-c3 {{
-            color: {custom_palette['amazon_orange']};
-        }}
-    </style>
-"""
+# # // NOTE: Apply the custom color palette using CSS
+# custom_css = f"""
+#     <style>
+#         body {{
+#             background-color: {custom_palette['amazon_grey']};
+#             color: {custom_palette['text']};
+#         }}
+#         .st-bw {{
+#             background-color: {custom_palette['amazon_blue']};
+#         }}
+#         .st-c3 {{
+#             color: {custom_palette['amazon_orange']};
+#         }}
+#     </style>
+# """
 
-# Render the custom CSS
-st.markdown(custom_css, unsafe_allow_html=True)
+# # Render the custom CSS
+# st.markdown(custom_css, unsafe_allow_html=True)
 
 
 # Header
