@@ -622,20 +622,21 @@ def recommendation_svd_1(model_select, reader_select, metric_score, user_id_sele
         ~df_ratings_books_processed["book_id"].isin(book_id)
     ]  # has all books that haven't been reviewd
     # user_books["user_id"] = len(user_books) * [user_id]
-    user_books.loc[:, "user_id"] = len(user_books) * [user_id]
-    user_books.reset_index(drop=True, inplace=True)
+    user_books_copy = user_books.copy()
+    user_books_copy.loc[:, "user_id"] = len(user_books) * [user_id]
+    user_books_copy.reset_index(drop=True, inplace=True)
 
     df_svd_predict = Dataset.load_from_df(
-        user_books[["user_id", "book_id", metric_score]], reader_select
+        user_books_copy[["user_id", "book_id", metric_score]], reader_select
     )
     NA, test = model_selection.train_test_split(df_svd_predict, test_size=1.0)
     predictions = model_select.test(test)
     predictions = [prediction.est for prediction in predictions]
     # user_books["rating"] = predictions
-    user_books.loc[:, "rating"] = predictions
+    user_books_copy.loc[:, "rating"] = predictions
 
     user_books_grouped = (
-        user_books.groupby("book_id")
+        user_books_copy.groupby("book_id")
         .agg({"review_score": "mean", "roberta_compound": "mean", "rating": "mean"})
         .reset_index()
     )
@@ -719,20 +720,21 @@ def recommendation_svd_2(model_select, reader_select, metric_score, user_id_sele
         ~df_ratings_books_processed["book_id"].isin(book_id)
     ]  # has all books that haven't been reviewd
     # user_books["user_id"] = len(user_books) * [user_id]
-    user_books.loc[:, "user_id"] = len(user_books) * [user_id]
-    user_books.reset_index(drop=True, inplace=True)
+    user_books_copy = user_books.copy()
+    user_books_copy.loc[:, "user_id"] = len(user_books) * [user_id]
+    user_books_copy.reset_index(drop=True, inplace=True)
 
     df_svd_predict = Dataset.load_from_df(
-        user_books[["user_id", "book_id", metric_score]], reader_select
+        user_books_copy[["user_id", "book_id", metric_score]], reader_select
     )
     NA, test = model_selection.train_test_split(df_svd_predict, test_size=1.0)
     predictions = model_select.test(test)
     predictions = [prediction.est for prediction in predictions]
     # user_books["rating"] = predictions
-    user_books.loc[:, "rating"] = predictions
+    user_books_copy.loc[:, "rating"] = predictions
 
     user_books_grouped = (
-        user_books.groupby("book_id")
+        user_books_copy.groupby("book_id")
         .agg({"review_score": "mean", "roberta_compound": "mean", "rating": "mean"})
         .reset_index()
     )
