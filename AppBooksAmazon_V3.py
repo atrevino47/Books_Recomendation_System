@@ -5,7 +5,6 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import pydeck as pdk
 import numpy as np
 from streamlit_option_menu import option_menu
 from PIL import Image
@@ -15,11 +14,8 @@ from streamlit_folium import st_folium
 from streamlit_folium import folium_static
 from folium import plugins
 import plotly.graph_objects as go
-import streamlit.components.v1 as components
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
-from streamlit_elements import elements, mui, html
-from streamlit_elements import dashboard
 import pickle as pk
 from surprise import Reader, Dataset
 from surprise import SVD, model_selection, accuracy
@@ -56,15 +52,9 @@ def load_dataframe_2(_data):
 
 # // TODO: Turn code into object oriented programming
 
-df_ratings_map = load_data(
-    "c:/Users/adria/Documents/MyPortfolio/Book_Recommendation_System/Resources/DataFrames/df_ratings_map.parquet"
-)
-df_graph1 = load_data(
-    "c:/Users/adria/Documents/MyPortfolio/Book_Recommendation_System/Resources/DataFrames/df_ratings_top10.parquet"
-)
-df_graph4 = load_data(
-    "c:/Users/adria/Documents/MyPortfolio/Book_Recommendation_System/Resources/DataFrames/df_final_grouped.parquet"
-)
+df_ratings_map = load_data("Resources/DataFrames/df_ratings_map.parquet")
+df_graph1 = load_data("Resources/DataFrames/df_ratings_top10.parquet")
+df_graph4 = load_data("Resources/DataFrames/df_final_grouped.parquet")
 
 # books_data = load_data("Resources/DataFrames/books_data.parquet")
 
