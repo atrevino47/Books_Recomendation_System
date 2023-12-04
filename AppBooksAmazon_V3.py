@@ -518,9 +518,9 @@ def recommendation_svd_1(model_select, reader_select, metric_score, user_id_sele
     top_50_books_for_user_content = user_books_merged.sort_values(
         by=["rating"], ascending=False
     )[:50]
-    top_50_books_for_user_content.to_csv(
-        "top_50_books_for_user_content.csv", index=False
-    )
+    # top_50_books_for_user_content.to_csv(
+    #     "top_50_books_for_user_content.csv", index=False
+    # )
     book_title_liked_by_user = set(
         df_ratings_books_processed[
             df_ratings_books_processed["user_id"] == user_id
@@ -616,9 +616,9 @@ def recommendation_svd_2(model_select, reader_select, metric_score, user_id_sele
     top_50_books_for_user_content = user_books_merged.sort_values(
         by=["rating"], ascending=False
     )[:50]
-    top_50_books_for_user_content.to_csv(
-        "top_50_books_for_user_content.csv", index=False
-    )
+    # top_50_books_for_user_content.to_csv(
+    #     "top_50_books_for_user_content.csv", index=False
+    # )
     book_title_liked_by_user = set(
         df_ratings_books_processed[
             df_ratings_books_processed["user_id"] == user_id
