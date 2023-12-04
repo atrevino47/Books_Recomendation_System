@@ -1,0 +1,6 @@
+/jupytherNB
+/Resources/Code/sentimentAnalysisPacs.py
+/Resources/DataFrames/filtered_books_data115.parquet
+/Resources/DataFrames/books_data.parquet
+/Resources/DataFrames/reviews_wBooks_data.parquet
+/Resources/DataFrames/SentimentAnalysis/200plusRatingsPerUser_60plusRatingsPerBook/not_used_df
