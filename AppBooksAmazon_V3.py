@@ -56,9 +56,17 @@ def load_dataframe_2(_data):
 
 # // TODO: Turn code into object oriented programming
 
-reviews_wBooks_data = load_data("Resources/DataFrames/reviews_wBooks_data.parquet")
+df_ratings_map = load_data(
+    "c:/Users/adria/Documents/MyPortfolio/Book_Recommendation_System/Resources/DataFrames/df_ratings_map.parquet"
+)
+df_graph1 = load_data(
+    "c:/Users/adria/Documents/MyPortfolio/Book_Recommendation_System/Resources/DataFrames/df_ratings_top10.parquet"
+)
+df_graph4 = load_data(
+    "c:/Users/adria/Documents/MyPortfolio/Book_Recommendation_System/Resources/DataFrames/df_final_grouped.parquet"
+)
 
-books_data = load_data("Resources/DataFrames/books_data.parquet")
+# books_data = load_data("Resources/DataFrames/books_data.parquet")
 
 df_ratings_books_processed = load_data(
     "Resources/DataFrames/SentimentAnalysis/200plusRatingsPerUser_60plusRatingsPerBook/df_ratings_books_processed.parquet"
@@ -83,65 +91,6 @@ model_SA = load_models("Resources/Models/BookRecommendation/model_svd_SA.pkl")
 
 # // NOTE: DATA PREPROCESSING
 # // TODO: Turn into functions
-
-books_data.rename(columns={"Title": "title", "categories": "genre"}, inplace=True)
-
-grouped_df = (
-    reviews_wBooks_data.groupby("title")
-    .agg({"title": "count", "review_score": "mean"})
-    .rename(columns={"title": "title_Count", "review_score": "average_review_score"})
-    .reset_index()
-)
-
-# Merge the aggregated data back to the original DataFrame
-reviews_wBooks_data = pd.merge(reviews_wBooks_data, grouped_df, on="title")
-
-# Top 10 Titles by Count and Average Score Data Frame
-top_titles_10 = (
-    reviews_wBooks_data.groupby("title")
-    .agg({"review_score": ["count", "mean"]})
-    .reset_index()
-)
-top_titles_10.columns = ["title", "Count", "Average_Score"]
-top_titles_10 = top_titles_10.sort_values(by="Count", ascending=False).head(10)
-
-# Prepare DataFrame for map
-top_titles_12 = (
-    reviews_wBooks_data.groupby("title")
-    .agg({"review_score": ["count", "mean"]})
-    .reset_index()
-)
-top_titles_12.columns = ["title", "Count", "Average_Score"]
-top_titles_12 = top_titles_12.sort_values(by="Count", ascending=False).head(12)
-top_titles_12.reset_index(inplace=True)
-
-merged_df = pd.merge(
-    top_titles_12,
-    books_data[["title", "authors", "image", "publishedDate"]],
-    on="title",
-    how="inner",
-)
-merged_df = merged_df.dropna()
-merged_df.reset_index(inplace=True)
-
-authors_df = pd.read_parquet("Resources/DataFrames/GenericDF/authors_df.parquet")
-
-# Merge with locations with books df
-merged_df_withloc = pd.merge(
-    merged_df,
-    authors_df[["authors", "lanlon", "place_of_birth", "country"]],
-    on="authors",
-    how="inner",
-)
-
-# Separate latitude and longitude
-merged_df_withloc[["latitude", "longitude"]] = (
-    merged_df_withloc["lanlon"].str.split(", ", expand=True).astype(float)
-)
-
-# // TODO: Search for a better way to filter the data or outright remove it later
-reviews_wBooks_data = reviews_wBooks_data[reviews_wBooks_data["authors"] != "NoAuthor"]
-reviews_wBooks_data = reviews_wBooks_data[reviews_wBooks_data["genre"] != "NoGenre"]
 
 
 # // NOTE: Begin STREAMLIT APP
@@ -190,25 +139,6 @@ continuous_colors = [
     (1, custom_palette["amazon_blue"]),
 ]
 
-# # // NOTE: Apply the custom color palette using CSS
-# custom_css = f"""
-#     <style>
-#         body {{
-#             background-color: {custom_palette['amazon_grey']};
-#             color: {custom_palette['text']};
-#         }}
-#         .st-bw {{
-#             background-color: {custom_palette['amazon_blue']};
-#         }}
-#         .st-c3 {{
-#             color: {custom_palette['amazon_orange']};
-#         }}
-#     </style>
-# """
-
-# # Render the custom CSS
-# st.markdown(custom_css, unsafe_allow_html=True)
-
 
 # Header
 col1, col2 = st.columns((0.8, 0.2))
@@ -226,22 +156,6 @@ with col2:
 
 
 # // NOTE: Sidebar menu
-
-
-# with st.sidebar:
-#     st.title("Filters")
-#     selected_genres = st.multiselect(
-#         "Select Genres", df_ratings_books_processed["genre"].unique()
-#     )
-#     selected_authors = st.multiselect(
-#         "Select Authors", df_ratings_books_processed["authors"].unique()
-#     )
-
-# # Filter the dataset based on selected genres and authors
-# df_ratings_books_processed_filt = df_ratings_books_processed[
-#     (df_ratings_books_processed["genre"].isin(selected_genres))
-#     & (df_ratings_books_processed["authors"].isin(selected_authors))
-# ]
 
 
 with st.expander("Objective"):
@@ -298,15 +212,15 @@ def displaymap():
     # Create a Folium Map
     my_map = folium.Map(
         location=[
-            merged_df_withloc["latitude"].mean(),
-            merged_df_withloc["longitude"].mean(),
+            df_ratings_map["latitude"].mean(),
+            df_ratings_map["longitude"].mean(),
         ],
         zoom_start=3,
     )
     # folium.TileLayer("stamentoner").add_to(my_map)
 
     # Add markers for each book in myMap
-    for index, row in merged_df_withloc.iterrows():
+    for index, row in df_ratings_map.iterrows():
         # Create a popup with book information
         popup_text = f"title: {row['title']}<br>Average Score: {row['Average_Score']}<br>Place of Birth: {row['place_of_birth']}"
 
@@ -334,7 +248,7 @@ def displaymap():
 def display_graph1():
     # Top 10 Titles by Count and Average Score
     sunburst_top10_titles_fig = px.sunburst(
-        top_titles_10,
+        df_graph1,
         path=["title"],
         values="Count",
         color="Average_Score",
@@ -355,8 +269,8 @@ def display_graph1():
 @st.cache_resource
 def display_graph2():
     # SunBurst Chart of Author birth country
-    labels = merged_df_withloc["country"].tolist()
-    values = merged_df_withloc["Count"].tolist()
+    labels = df_ratings_map["country"].tolist()
+    values = df_ratings_map["Count"].tolist()
 
     colors = divergent_colors[: len(labels)]
 
@@ -381,72 +295,14 @@ def display_graph2():
     return top10_authors_countryPie_figdef
 
 
-# def display_graph3():
-#     colors2 = divergent_colors[:5]
-
-#     all_ratings_fig = px.histogram(
-#         x=reviews_wBooks_data["review_score"],
-#         color=reviews_wBooks_data["review_score"],
-#         color_discrete_sequence=colors2,
-#     )
-
-#     # Set the chart title
-#     all_ratings_fig.update_layout(title_text="Distribution of ratings")
-
-#     # Show the plot
-#     all_ratings_figdef = st.plotly_chart(all_ratings_fig, use_container_width=True)
-#     return all_ratings_figdef
-
-
 @st.cache_resource
 def display_graph4():
     # Create a Sunburst chart
 
-    top_genres = reviews_wBooks_data["genre"].value_counts().nlargest(3).index
-    df_top_genres = reviews_wBooks_data[reviews_wBooks_data["genre"].isin(top_genres)]
-
-    # Step 2: For each top genre, filter by top 10 authors
-    top_authors_by_genre = (
-        df_top_genres.groupby("genre")["authors"]
-        .value_counts()
-        .groupby("genre", group_keys=False)
-        .nlargest(3)
-        .index.get_level_values("authors")
-    )
-
-    df_final_0 = df_top_genres[df_top_genres["authors"].isin(top_authors_by_genre)]
-
-    title_mapping = {
-        "The Hobbit; Or, There and Back Again": "The Hobbit",
-        "The Hobbitt, or there and back again; illustrated by the author.": "The Hobbit",
-        "The Hobbit or There and Back Again": "The Hobbit",
-        "The Hobbit There and Back Again": "The Hobbit",
-    }
-    # df_final["grouped_title"] = (
-    #     df_final["title"].map(title_mapping).fillna(df_final["title"])
-    # )
-    df_final = df_final_0.copy()
-    df_final.loc[:, "grouped_title"] = (
-        df_final["title"].map(title_mapping).fillna(df_final["title"])
-    )
-
-    # Perform groupby operation on "grouped_title" and calculate the mean of "review_score"
-    df_final_grouped = (
-        df_final.groupby(["genre", "authors", "grouped_title"])
-        .agg({"review_score": "mean", "grouped_title": "count"})
-        .rename(
-            columns={
-                "grouped_title": "title_Count",
-                "review_score": "average_review_score",
-            }
-        )
-        .reset_index()
-    )
-
-    midpoint = df_final_grouped["title_Count"].max() / 2
+    midpoint = df_graph4["title_Count"].max() / 2
 
     fig = px.sunburst(
-        df_final_grouped,
+        df_graph4,
         path=["genre", "authors", "grouped_title"],
         values="title_Count",
         title="Sunburst Chart of Categories, Authors, and Titles",
@@ -808,7 +664,7 @@ def recommendation_svd_2(model_select, reader_select, metric_score, user_id_sele
 if selected_menu == "Dashboard":
     st.write("Dashboard")
 
-    average_rating = reviews_wBooks_data["review_score"].mean()
+    average_rating = df_ratings_books_processed["review_score"].mean()
     average_roberta_compound = df_ratings_books_processed["roberta_compound"].mean()
     top_book = df_ratings_books_processed.loc[
         df_ratings_books_processed["review_score"].idxmax()
@@ -869,7 +725,7 @@ if selected_menu == "Dashboard":
 
 elif selected_menu == "Sentiment Analysis":
     st.write("Sentiment Analysis")
-    average_rating = reviews_wBooks_data["review_score"].mean()
+    average_rating = df_ratings_books_processed["review_score"].mean()
     average_roberta_compound = df_ratings_books_processed["roberta_compound"].mean()
     top_book = df_ratings_books_processed.loc[
         df_ratings_books_processed["review_score"].idxmax()
