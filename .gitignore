@@ -4,3 +4,5 @@
 /Resources/DataFrames/books_data.parquet
 /Resources/DataFrames/reviews_wBooks_data.parquet
 /Resources/DataFrames/SentimentAnalysis/200plusRatingsPerUser_60plusRatingsPerBook/not_used_df
+/Resources/DataFrames/GenericDF
+/WebAppsDemo
